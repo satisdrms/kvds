@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata>
+	<datastore>
+		<datastorehomepath>C:\rest\kvstore</datastorehomepath>
+		<nodes>
+			<node>
+				<hostname>localhost</hostname>
+				<port>4001</port>
+				<datastorelocation>1</datastorelocation>
+				<alive>true</alive>
+			</node>
+			<node>
+				<hostname>localhost</hostname>
+				<port>4002</port>
+				<datastorelocation>2</datastorelocation>
+				<alive>true</alive>
+			</node>
+			<node>
+				<hostname>localhost</hostname>
+				<port>4003</port>
+				<datastorelocation>3</datastorelocation>
+				<alive>true</alive>
+			</node>
+			<node>
+				<hostname>localhost</hostname>
+				<port>4004</port>
+				<datastorelocation>4</datastorelocation>
+				<alive>true</alive>
+			</node>
+		</nodes>
+	</datastore>
+	<metadataserver>
+		<hostname>localhost</hostname>
+		<port>4000</port>
+	</metadataserver>
+	<timeout>100</timeout>
+</metadata>
