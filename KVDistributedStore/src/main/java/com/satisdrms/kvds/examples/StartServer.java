@@ -12,7 +12,6 @@ public class StartServer {
 		DataStoreProcess ds2 = new DataStoreProcess(4002);
 		DataStoreProcess ds3 = new DataStoreProcess(4003);
 		DataStoreProcess ds4 = new DataStoreProcess(4004);
-		System.out.println();
 		mds.start();
 		ds1.start();
 		ds2.start();
