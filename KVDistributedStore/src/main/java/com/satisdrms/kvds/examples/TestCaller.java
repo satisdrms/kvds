@@ -9,8 +9,9 @@ import com.satisdrms.kvds.requesthandler.RequestHandlerProcess;
 
 public class TestCaller {
 	static String inputXML = "src/main/resources/DataStoreConfig.xml";
+
 	public static void main(String[] args) {
-		 //xmlWork();
+		// xmlWork();
 		e2e();
 		// mdstst();
 
@@ -22,10 +23,9 @@ public class TestCaller {
 	}
 
 	private static void e2e() {
-		System.out.println("tesst");
 		RequestHandlerProcess r = new RequestHandlerProcess(inputXML);
 		r.putKV("sathish", "data");
-		r.putKV("key", "values");
+		// r.putKV("key", "values");
 		// r.putKV("kanaga", "subra");
 		System.out.println(r.getValue("sathish"));
 	}

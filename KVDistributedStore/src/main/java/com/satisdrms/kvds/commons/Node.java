@@ -3,6 +3,10 @@ package com.satisdrms.kvds.commons;
 import java.io.Serializable;
 
 public class Node implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8503029603410523636L;
 	String hostName;
 	String port;
 	String dataStoreLocation;

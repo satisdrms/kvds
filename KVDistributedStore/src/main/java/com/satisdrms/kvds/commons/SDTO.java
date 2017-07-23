@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SDTO   implements Serializable{
+public class SDTO implements Serializable {
 	/**
 	 * 
 	 */
@@ -18,8 +18,27 @@ public class SDTO   implements Serializable{
 	public void addNodes(Node node) {
 		dataStoreNodes.add(node);
 	}
-	public List<Node> getNodes(){
+
+	public List<Node> getNodes() {
 		return dataStoreNodes;
+	}
+
+	public Node getAndRemoveANode() {
+		return dataStoreNodes.remove(0);
+	}
+
+	public boolean isDistributionOver() {
+		if (dataStoreNodes.size() > 0)
+			return true;
+		else
+			return false;
+	}
+
+	public void print() {
+		for (Node n : dataStoreNodes) {
+			System.out.println(n.hostName + "-" + n.port);
+		}
+
 	}
 
 }

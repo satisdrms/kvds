@@ -30,6 +30,7 @@ public class RequestHandlerProcess {
 	public void putKV(String key, String value) {
 		KVDTO kv = new KVDTO(key, value, true, false);
 		connectToMetaDataServerGetNodesForKey(kv);
+		sdto.print();
 		connectToDataStoreAndPutKVPair(kv);
 	}
 
@@ -75,30 +76,32 @@ public class RequestHandlerProcess {
 	}
 
 	public void connectToDataStoreAndPutKVPair(KVDTO kv) {
-		for (Node node : sdto.getNodes()) {
-			String host = node.getHostname();
-			int port = node.getPort();
-			Socket s = null;
-			try {
-				// s = new Socket(host, port);
-				s = new Socket();
-				s.connect(new InetSocketAddress(host, port), config.getTimeOut());
+		if (kv == null)
+			return;
+		Node node = sdto.getAndRemoveANode();
+		kv.setSDTO(sdto);
+		String host = node.getHostname();
+		int port = node.getPort();
+		Socket s = null;
+		try {
+			// s = new Socket(host, port);
+			System.out.println("Picked first data store server as " + host + " " + port + " for distribution");
+			s = new Socket();
+			s.connect(new InetSocketAddress(host, port), config.getTimeOut());
 
-				ObjectOutputStream out = new ObjectOutputStream((s.getOutputStream()));
-				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(s.getInputStream()));
-				out.writeObject((Object) kv);
-				out.close();
-				in.close();
-				s.close();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ObjectOutputStream out = new ObjectOutputStream((s.getOutputStream()));
+			ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(s.getInputStream()));
+			out.writeObject((Object) kv);
+			out.close();
+			in.close();
+			s.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 	}
 
 	public String connectToDataStoreAndGetValue(String key) {

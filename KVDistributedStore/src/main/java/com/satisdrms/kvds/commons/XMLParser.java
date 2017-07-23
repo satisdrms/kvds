@@ -9,7 +9,6 @@ import org.w3c.dom.NodeList;
 
 import com.satisdrms.kvds.metadataserver.ConfigurationsBO;
 
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 public class XMLParser {

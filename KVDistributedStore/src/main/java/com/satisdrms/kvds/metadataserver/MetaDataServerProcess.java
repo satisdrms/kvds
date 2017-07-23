@@ -30,6 +30,7 @@ public class MetaDataServerProcess extends Thread {
 		startMDServer();
 	}
 
+	@SuppressWarnings("resource")
 	public void startMDServer() {
 		ServerSocket serverSocket = null;
 		try {

@@ -18,7 +18,6 @@ public class KVGet {
 	public String getValue(@PathParam("key") String key) {
 		String inputXML = "C:\\rest\\DataStoreConfig.xml";
 		RequestHandlerProcess r = new RequestHandlerProcess(inputXML);
-		System.out.println("holss");
 		return '"' + r.getValue(key) + '"';
 	}
 

@@ -4,16 +4,22 @@ import java.io.Serializable;
 
 //This is a Key Value Data Transfer Object for sending data between client and server
 public class KVDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3311596015447473507L;
 	boolean put;
 	boolean get;
 	String key;
 	String value;
+	SDTO sdto;
 
 	public KVDTO(String key, String value, boolean isPut, boolean isGet) {
 		this.key = key;
 		this.value = value;
 		this.put = isPut;
 		this.get = isGet;
+		this.sdto = null;
 	}
 
 	public boolean isPut() {
@@ -46,6 +52,14 @@ public class KVDTO implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public void setSDTO(SDTO sdto) {
+		this.sdto = sdto;
+	}
+
+	public SDTO getSDTO() {
+		return this.sdto;
 	}
 
 }
