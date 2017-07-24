@@ -33,6 +33,11 @@ To start the api services :- place the below config file in the below location f
  
 Location :- C:\rest
 
+Tomcat Web Servers(8.0.45):-
+
+Deploy the API war bundle to the Tomcat servers with two different ports 8080 8081.
+
+
 Sample curl call commands are:- I ran the commands in windows
 curl -H "Accept: application/json" http://localhost:8081/api/rest/get/test
 curl -H "Content-type: application/json" -X POST "http://localhost:8080/api/rest/set/test" -d {"""value""":"""dasautos1"""}1
