@@ -1,10 +1,10 @@
-package com.satisdrms.kvds.api;
+package com.satisdrms.kvds.test;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ValueBO {
+public class ValueDTO {
 	@XmlElement
 	String value;
 

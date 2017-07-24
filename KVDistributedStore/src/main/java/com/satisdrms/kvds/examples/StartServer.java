@@ -8,10 +8,10 @@ public class StartServer {
 		String inputXML = "src/main/resources/DataStoreConfig.xml";
 
 		MetaDataServerProcess mds = new MetaDataServerProcess(inputXML);
-		DataStoreProcess ds1 = new DataStoreProcess(inputXML, 4001);
-		DataStoreProcess ds2 = new DataStoreProcess(inputXML, 4002);
-		DataStoreProcess ds3 = new DataStoreProcess(inputXML, 4003);
-		DataStoreProcess ds4 = new DataStoreProcess(inputXML, 4004);
+		DataStoreProcess ds1 = new DataStoreProcess(4001);
+		DataStoreProcess ds2 = new DataStoreProcess(4002);
+		DataStoreProcess ds3 = new DataStoreProcess(4003);
+		DataStoreProcess ds4 = new DataStoreProcess(4004);
 		mds.start();
 		ds1.start();
 		ds2.start();

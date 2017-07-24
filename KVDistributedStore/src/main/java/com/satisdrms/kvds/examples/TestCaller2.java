@@ -7,7 +7,7 @@ import com.satisdrms.kvds.metadataserver.ConfigurationsBO;
 import com.satisdrms.kvds.metadataserver.MetaDataServerProcess;
 import com.satisdrms.kvds.requesthandler.RequestHandlerProcess;
 
-public class TestCaller {
+public class TestCaller2 {
 	static String inputXML = "src/main/resources/DataStoreConfig.xml";
 
 	public static void main(String[] args) {
@@ -25,12 +25,12 @@ public class TestCaller {
 	private static void e2e() {
 		RequestHandlerProcess r = new RequestHandlerProcess(inputXML);
 		System.out.println("Putting first value");
-		r.putKV("1", "data");
+		r.putKV("2", "data");
 		System.out.println("Putting second value");
 		// r.putKV("key", "values");
-		 r.putKV("3", "dats");
+		 r.putKV("4", "frame");
 		 System.out.println("all done");
-		System.out.println(r.getValue("1"));
+		System.out.println(r.getValue("4"));
 	}
 
 	private static void xmlWork() {
@@ -43,3 +43,5 @@ public class TestCaller {
 	}
 
 }
+
+ 

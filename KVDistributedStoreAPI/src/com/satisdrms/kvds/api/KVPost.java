@@ -15,7 +15,7 @@ public class KVPost {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 
-	public void postKVPair(@PathParam("key") String key, ValueBO val) {
+	public void postKVPair(@PathParam("key") String key, ValueDTO val) {
 		String inputXML = "C:\\rest\\DataStoreConfig.xml";
 		System.out.println("value from json is " + val.value);
 		RequestHandlerProcess r = new RequestHandlerProcess(inputXML);

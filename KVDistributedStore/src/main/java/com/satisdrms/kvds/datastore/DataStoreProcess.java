@@ -18,19 +18,14 @@ import com.satisdrms.kvds.metadataserver.ConfigurationsBO;
 public class DataStoreProcess extends Thread {
 	DataStoreBO dbo;
 	int port;
-	ConfigurationsBO config;
-	File inputPath;
 
-	public DataStoreProcess(String inputXML, int port) {
+	public DataStoreProcess(int port) {
 		this.port = port;
-		inputPath = new File(inputXML);
 		init();
 	}
 
 	private void init() {
 		dbo = new DataStoreBO();
-		config = new ConfigurationsBO();
-		XMLParser.readXML(inputPath, config);
 	}
 
 	public void run() {
@@ -92,7 +87,7 @@ public class DataStoreProcess extends Thread {
 			try {
 				// s = new Socket(host, port);
 				s = new Socket();
-				s.connect(new InetSocketAddress(nextHost, nextPort), config.getTimeOut());
+				s.connect(new InetSocketAddress(nextHost, nextPort), 1000);
 
 				ObjectOutputStream out = new ObjectOutputStream((s.getOutputStream()));
 				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(s.getInputStream()));
