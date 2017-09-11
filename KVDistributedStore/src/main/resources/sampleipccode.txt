@@ -1,0 +1,327 @@
+package com.satisdrms.client;
+
+import java.io.*;
+import java.net.*;
+
+public class AnotherClient {
+	// This example is from the book _Java in a Nutshell_ by David Flanagan.
+
+	public static final int DEFAULT_PORT = 8000;
+
+	public static void usage() {
+		System.out.println("Usage: java Client <hostname> [<port>]");
+		System.exit(0);
+	}
+
+	public static void main(String[] args) {
+		int port = DEFAULT_PORT;
+		Socket s = null;
+
+		// Parse the port specification
+		if ((args.length != 1) && (args.length != 2))
+			usage();
+		if (args.length == 1)
+			port = DEFAULT_PORT;
+		else {
+			try {
+				port = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				usage();
+			}
+		}
+
+		try {
+			// Create a socket to communicate to the specified host and port
+			s = new Socket(args[0], port);
+			// Create streams for reading and writing lines of text
+			// from and to this socket.
+			BufferedReader sin = new BufferedReader(new InputStreamReader(
+					s.getInputStream()));
+			PrintStream sout = new PrintStream(s.getOutputStream());
+			// Create a stream for reading lines of text from the console
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					System.in));
+
+			// Tell the user that we've connected
+			System.out.println("Connected to " + s.getInetAddress() + ":"
+					+ s.getPort());
+
+			String line;
+			while (true) {
+				// print a prompt
+				System.out.print("> ");
+				System.out.flush();
+				// read a line from the console; check for EOF
+				line = in.readLine();
+				if (line == null)
+					break;
+				// Send it to the server
+				sout.println(line);
+				// Read a line from the server.
+				line = sin.readLine();
+				// Check if connection is closed (i.e. for EOF)
+				if (line == null) {
+					System.out.println("Connection closed by server.");
+					break;
+				}
+				// And write the line to the console.
+				System.out.println(line);
+			}
+		} catch (IOException e) {
+			System.err.println(e);
+		}
+		// Always be sure to close the socket
+		finally {
+			try {
+				if (s != null)
+					s.close();
+			} catch (IOException e2) {
+				;
+			}
+		}
+
+	}
+}
+
+
+
+-----------
+package com.satisdrms.client;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class smtpClient {
+
+	public static void main(String[] args) {
+		// declaration section:
+		// smtpClient: our client socket
+		// os: output stream
+		// is: input stream
+		Socket smtpSocket = null;
+		DataOutputStream os = null;
+		DataInputStream is = null;
+		// Initialization section:
+		// Try to open a socket on port 25
+		// Try to open input and output streams
+		try {
+			smtpSocket = new Socket("localhost", 9998);
+			os = new DataOutputStream(smtpSocket.getOutputStream());
+			is = new DataInputStream(smtpSocket.getInputStream());
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host: hostname");
+		} catch (IOException e) {
+			System.err
+					.println("Couldn't get I/O for the connection to: hostname");
+		}
+		// If everything has been initialized then we want to write some data
+		// to the socket we have opened a connection to on port 25
+		if (smtpSocket != null && os != null && is != null) {
+			try {
+				// The capital string before each colon has a special meaning to
+				// SMTP
+				// you may want to read the SMTP specification, RFC1822/3
+				os.writeBytes("HELO\n");
+				os.writeBytes("MAIL From: k3is@fundy.csd.unbsj.ca\n");
+				os.writeBytes("RCPT To: k3is@fundy.csd.unbsj.ca\n");
+				os.writeBytes("DATA\n");
+				os.writeBytes("From: k3is@fundy.csd.unbsj.ca\n");
+				os.writeBytes("Subject: testing\n");
+				os.writeBytes("Hi there\n"); // message body
+				os.writeBytes("\n.\n");
+				os.writeBytes("QUIT");
+				// keep on reading from/to the socket till we receive the "Ok"
+				// from SMTP,
+				// once we received that then we want to break.
+				String responseLine;
+				while ((responseLine = is.readLine()) != null) {
+					System.out.println("Server: " + responseLine);
+					if (responseLine.indexOf("Ok") != -1) {
+						break;
+					}
+				}
+				// clean up:
+				// close the output stream
+				// close the input stream
+				// close the socket
+				os.close();
+				is.close();
+				smtpSocket.close();
+			} catch (UnknownHostException e) {
+				System.err.println("Trying to connect to unknown host: " + e);
+			} catch (IOException e) {
+				System.err.println("IOException:  " + e);
+			}
+		}
+	}
+}
+
+----------------
+package com.satisdrms.server;
+
+import java.io.*;
+import java.net.*;
+
+public class AnotherServer extends Thread {
+	// This example is from the book _Java in a Nutshell_ by David Flanagan.
+
+	public final static int DEFAULT_PORT = 8000;
+	protected int port;
+	protected ServerSocket listen_socket;
+
+	// Exit with an error message, when an exception occurs.
+	public static void fail(Exception e, String msg) {
+		System.err.println(msg + ": " + e);
+		System.exit(1);
+	}
+
+	// Create a ServerSocket to listen for connections on; start the thread.
+	public AnotherServer(int port) {
+		if (port == 0)
+			port = DEFAULT_PORT;
+		this.port = port;
+		try {
+			listen_socket = new ServerSocket(port);
+		} catch (IOException e) {
+			fail(e, "Exception creating server socket");
+		}
+		System.out.println("Server: listening on port " + port);
+		this.start();
+	}
+
+	// The body of the server thread. Loop forever, listening for and
+	// accepting connections from clients. For each connection,
+	// create a Connection object to handle communication through the
+	// new Socket.
+	public void run() {
+		try {
+			while (true) {
+				Socket client_socket = listen_socket.accept();
+				Connection c = new Connection(client_socket);
+			}
+		} catch (IOException e) {
+			fail(e, "Exception while listening for connections");
+		}
+	}
+
+	// Start the server up, listening on an optionally specified port
+	public static void main(String[] args) {
+		int port = 0;
+		if (args.length == 1) {
+			try {
+				port = Integer.parseInt(args[0]);
+			} catch (NumberFormatException e) {
+				port = 0;
+			}
+		}
+		new AnotherServer(port);
+	}
+}
+
+// This class is the thread that handles all communication with a client
+class Connection extends Thread {
+	protected Socket client;
+	protected BufferedReader in;
+	protected PrintStream out;
+
+	// Initialize the streams and start the thread
+	public Connection(Socket client_socket) {
+		client = client_socket;
+		try {
+			in = new BufferedReader(new InputStreamReader(
+					client.getInputStream()));
+			out = new PrintStream(client.getOutputStream());
+		} catch (IOException e) {
+			try {
+				client.close();
+			} catch (IOException e2) {
+				;
+			}
+			System.err.println("Exception while getting socket streams: " + e);
+			return;
+		}
+		this.start();
+	}
+
+	// Provide the service.
+	// Read a line, reverse it, send it back.
+	public void run() {
+		String line;
+		StringBuffer revline;
+		int len;
+		try {
+			for (;;) {
+				// read in a line
+				line = in.readLine();
+				if (line == null)
+					break;
+				// reverse it
+				len = line.length();
+				revline = new StringBuffer(len);
+				for (int i = len - 1; i >= 0; i--)
+					revline.insert(len - 1 - i, line.charAt(i));
+				// and write out the reversed line
+				out.println(revline);
+			}
+		} catch (IOException e) {
+			;
+		} finally {
+			try {
+				client.close();
+			} catch (IOException e2) {
+				;
+			}
+		}
+	}
+}
+
+--------------
+package com.satisdrms.server;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class echo3 {
+
+	public static void main(String args[]) {
+		// declaration section:
+		// declare a server socket and a client socket for the server
+		// declare an input and an output stream
+		ServerSocket echoServer = null;
+		String line;
+		DataInputStream is;
+		PrintStream os;
+		Socket clientSocket = null;
+		// Try to open a server socket on port 9999
+		// Note that we can't choose a port less than 1023 if we are not
+		// privileged users (root)
+		try {
+			echoServer = new ServerSocket(9998);
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		// Create a socket object from the ServerSocket to listen and accept
+		// connections.
+		// Open input and output streams
+		try {
+			clientSocket = echoServer.accept();
+			is = new DataInputStream(clientSocket.getInputStream());
+			os = new PrintStream(clientSocket.getOutputStream());
+			// As long as we receive data, echo that data back to the client.
+			while (true) {
+				line = is.readLine();
+				os.println(line);
+			}
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+	}
+
+}
+
